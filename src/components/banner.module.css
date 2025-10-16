@@ -1,0 +1,29 @@
+.banner {
+  display: block;
+  padding: 5px;
+  margin: 0%;
+  width : 100vw;
+  height: 50vh;
+  position: relative;
+  display: block;
+  align-items: center;
+  justify-content: center;
+}
+
+.bannerText {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: relative;
+  top: 100px;
+  z-index: 20;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+}
