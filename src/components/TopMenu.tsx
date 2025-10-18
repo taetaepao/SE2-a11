@@ -10,7 +10,7 @@ export default function TopMenu() {
   return (
 
     <nav className="flex justify-between items-center p-4 shadow">
-      <div className="flex space-x-4 text-black justify-between">
+      <div className="flex space-x-4 text-black">
         {session ? (
           <button onClick={() => signOut()} className="text-red-500">
             Sign Out
@@ -22,7 +22,7 @@ export default function TopMenu() {
         )}
         <Link href="/mybooking">My Booking</Link>
       </div>
-      <div className="flex space-x-4 text-black justify-between">
+      <div className="flex space-x-4 text-black">
         <Link href="/">Home</Link>
         <Link href="/booking">Booking</Link>
         <Image src="/img/logo.png" alt="logo"  width={30} height={30}/>
