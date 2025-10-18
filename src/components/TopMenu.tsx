@@ -19,6 +19,7 @@ export default function TopMenu() {
           Sign In
         </Link>
       )}
+      <Link href="/mybooking">My Booking</Link>
 
       <div className="flex space-x-4 text-black">
         <Link href="/">Home</Link>

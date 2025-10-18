@@ -1,47 +1,125 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import  getUserProfile  from "@/libs/getUserProfile";
-import BookingForm from "@/components/BookingForm";
-import { Box, Typography, Paper } from "@mui/material";
+"use client";
 
-export default async function BookingPage() {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user.token) {
-    return (
-      <main className="flex items-center justify-center min-h-screen">
-        <Typography variant="h5" className="text-gray-700">
-          Please sign in to make a booking.
-        </Typography>
-      </main>
-    );
-  }
+import {
+  TextField,
+  Button,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Box,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addBooking } from "@/redux/features/bookSlice";
 
-  const profileResponse = await getUserProfile(session.user.token as string);
-  const profile = profileResponse?.data || null;
+export default function BookingPage() {
+  const dispatch = useDispatch();
+
+  // ฟอร์มจอง
+  const [form, setForm] = useState({
+    nameLastname: "",
+    tel: "",
+    venue: "Bloom",
+    bookDate: "",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSelectChange = (e: any) => {
+    setForm({ ...form, venue: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.nameLastname || !form.tel || !form.bookDate) {
+      alert("⚠️ กรุณากรอกข้อมูลให้ครบทุกช่อง");
+      return;
+    }
+    dispatch(addBooking(form));
+    alert("✅ เพิ่มการจองเรียบร้อยแล้ว!");
+    setForm({
+      nameLastname: "",
+      tel: "",
+      venue: "Bloom",
+      bookDate: "",
+    });
+  };
 
   return (
-    <Box className="p-6 md:p-10 flex flex-col items-center">
-      {profile && (
-        <Paper
-          elevation={3}
-          className="w-full max-w-2xl p-6 mb-10 rounded-2xl bg-gradient-to-br from-indigo-50 to-white"
-        >
-          <Typography variant="h5" className="font-bold mb-4 text-indigo-700">
-            User Profile
-          </Typography>
-          <Box className="grid grid-cols-1 md:grid-cols-2 gap-y-2">
-            <Typography><strong>Name:</strong> {profile.name}</Typography>
-            <Typography><strong>Email:</strong> {profile.email}</Typography>
-            <Typography><strong>Tel:</strong> {profile.tel}</Typography>
-            <Typography>
-              <strong>Member Since:</strong>{" "}
-              {new Date(profile.createdAt).toLocaleDateString()}
-            </Typography>
-          </Box>
-        </Paper>
-      )}
+    <Box
+      sx={{
+        p: 4,
+        maxWidth: 600,
+        mx: "auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+      }}
+    >
+      <Typography variant="h5" gutterBottom textAlign="center">
+        จองสถานที่จัดเลี้ยง
+      </Typography>
 
-      <BookingForm profile={profile} />
+      <form onSubmit={handleSubmit}>
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Name-Lastname"
+          name="nameLastname"
+          value={form.nameLastname}
+          onChange={handleChange}
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Contact-Number"
+          name="tel"
+          value={form.tel}
+          onChange={handleChange}
+        />
+
+        <FormControl fullWidth margin="normal">
+          <InputLabel id="venue-label">Venue</InputLabel>
+          <Select
+            labelId="venue-label"
+            id="venue"
+            value={form.venue}
+            label="Venue"
+            onChange={handleSelectChange}
+          >
+            <MenuItem value="Bloom">The Bloom Pavilion</MenuItem>
+            <MenuItem value="Spark">Spark Space</MenuItem>
+            <MenuItem value="GrandTable">The Grand Table</MenuItem>
+          </Select>
+        </FormControl>
+
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Booking Date"
+          type="date"
+          name="bookDate"
+          InputLabelProps={{ shrink: true }}
+          value={form.bookDate}
+          onChange={handleChange}
+        />
+
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          name="Book Venue"
+          sx={{ mt: 2 }}
+        >
+          จองสถานที่จัดเลี้ยง
+        </Button>
+      </form>
     </Box>
   );
 }

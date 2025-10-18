@@ -24,3 +24,10 @@ export interface SingleVenueResponse {
   success: boolean,
   data: VenueItem;
 }
+
+export interface BookingItem {
+  nameLastname: string;
+  tel: string;
+  venue: string;
+  bookDate: string;
+}
